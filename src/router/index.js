@@ -9,21 +9,21 @@ import Layout from '@/layout'
 /* Router Modules */
 
 export const constantRoutes = [
-  {
-    path: '/login',
-    component: () => import('@/views/login/index'),
-    hidden: true
-  },
-  {
-    path: '/404',
-    component: () => import('@/views/error-page/404'),
-    hidden: true
-  },
-  {
-    path: '/401',
-    component: () => import('@/views/error-page/401'),
-    hidden: true
-  },
+  // {
+  //   path: '/login',
+  //   component: () => import('@/view/login/index'),
+  //   hidden: true
+  // },
+  // {
+  //   path: '/404',
+  //   component: () => import('@/view/error-page/404'),
+  //   hidden: true
+  // },
+  // {
+  //   path: '/401',
+  //   component: () => import('@/view/error-page/401'),
+  //   hidden: true
+  // },
   {
     path: '/',
     component: Layout,
@@ -31,40 +31,28 @@ export const constantRoutes = [
     children: [
       {
         path: 'shoppingMall',
-        component: () => import('@/views/shoppingMall/index'),
+        component: () => import('@/view/shoppingMall/index'),
         name: 'shoppingMall'
       },
       {
         path: 'commodity',
-        component: () => import('@/views/commodity/index'),
+        component: () => import('@/view/commodity/index'),
         name: 'commodity'
       },
       {
         path: 'orderForm',
-        component: () => import('@/views/orderForm/index'),
+        component: () => import('@/view/orderForm/index'),
         name: 'orderForm'
       },
       {
         path: 'member',
-        component: () => import('@/views/member/index'),
+        component: () => import('@/view/member/index'),
         name: 'member'
       },
       {
         path: 'discountCoupon',
-        component: () => import('@/views/shoppingMall/index'),
+        component: () => import('@/view/shoppingMall/index'),
         name: 'discountCoupon'
-      }
-    ]
-  },
-  {
-    path: '/documentation',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/documentation/index'),
-        name: 'Documentation',
-        meta: { title: 'Documentation', icon: 'documentation', affix: true }
       }
     ]
   }
