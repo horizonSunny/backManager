@@ -30,9 +30,29 @@ export const constantRoutes = [
     redirect: '/dashboard',
     children: [
       {
-        path: 'dashboard',
-        component: () => import('@/views/dashboard/index'),
-        name: 'Dashboard'
+        path: 'shoppingMall',
+        component: () => import('@/views/shoppingMall/index'),
+        name: 'shoppingMall'
+      },
+      {
+        path: 'commodity',
+        component: () => import('@/views/commodity/index'),
+        name: 'commodity'
+      },
+      {
+        path: 'orderForm',
+        component: () => import('@/views/orderForm/index'),
+        name: 'orderForm'
+      },
+      {
+        path: 'member',
+        component: () => import('@/views/member/index'),
+        name: 'member'
+      },
+      {
+        path: 'discountCoupon',
+        component: () => import('@/views/shoppingMall/index'),
+        name: 'discountCoupon'
       }
     ]
   },
