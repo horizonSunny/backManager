@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <el-container style="height: 100%; border: 1px solid #eee">
-      <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
+      <el-aside width="200px" style="background-color: rgb(238, 241, 246);">
         <el-menu>
           <el-menu-item
             v-for="(item, indexInfo) in sidebarInfo"
@@ -20,7 +20,7 @@
       </el-aside>
 
       <el-container>
-        <el-header style="text-align: right; font-size: 12px">
+        <el-header style="text-align: right; font-size: 12px;">
           <el-dropdown>
             <i class="el-icon-setting" style="margin-right: 15px"></i>
             <el-dropdown-menu slot="dropdown">
