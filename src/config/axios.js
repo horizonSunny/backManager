@@ -1,8 +1,9 @@
-import axios from 'uni-axios'
-import { baseUrl, channelNo } from './global'
+import axios from 'axios'
+import { baseUrl } from './global'
 /**
  * 请求接口日志记录
  */
+/* eslint-disable */
 function _reqlog(req) {
   if (process.env.NODE_ENV === 'development') {
     console.log('请求地址：' + req.url, req.data || req.params)
@@ -28,16 +29,13 @@ const http = axios.create({
   // #endif
   headers: {
     'Content-Type': 'application/json',
-    authorization: channelNo
-  }
+    authorization:
+      'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZW5hbnRfaWQiOjEzLCJ1c2VyX2lkIjo0LCJ1c2VyX25hbWUiOiJzdW55dSIsInNjb3BlIjpbInNlcnZlciJdLCJ1c2VyVHlwZSI6IjEiLCJleHAiOjE1ODA2MDQ3ODUsImRlcHRfaWQiOjAsImF1dGhvcml0aWVzIjpbIlJPTEVfIl0sImp0aSI6ImQ3OTlmNmNiLTg4YzAtNDNmYS1hNzkyLWI4YzI4NDE5NzE0NyIsImNsaWVudF9pZCI6InN5c3RlbSIsInVzZXJuYW1lIjoic3VueXUifQ.GiaNarcdR9dn22Zr6r99ft6bnIgYGNbPN3dYe95wUFw'
+  },
+  withCredentials: false
 })
 // 拦截器 在请求之前拦截
 http.interceptors.request.use(config => {
-  // code...
-  // let accsess_token = storage.getSync('access_token')
-  // if (accsess_token) {
-  //   config.headers.authorization = accsess_token
-  // }
   _reqlog(config)
   return config
 })
@@ -45,11 +43,6 @@ http.interceptors.request.use(config => {
 // 拦截器 在请求之后拦截
 http.interceptors.response.use(
   response => {
-    // response.code代表token失效
-    // console.log('response.code_', response.data.code)
-    // if (response.data.code === 2) {
-    //   storage.setSync('access_token', channelNo)
-    // }
     return response.data
     // code...
   },

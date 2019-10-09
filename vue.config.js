@@ -1,3 +1,4 @@
+import { baseUrl } from './src/config/global'
 const path = require('path')
 function resolve(dir) {
   return path.join(__dirname, dir)
