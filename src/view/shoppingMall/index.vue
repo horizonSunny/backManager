@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="main">
     <el-container style="height: 100%; border: 1px solid #eee">
       <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
         <el-menu>
@@ -59,6 +59,10 @@ export default {
 };
 </script>
 <style>
+.main {
+  height: 100%;
+  width: 100%;
+}
 .el-header {
   background-color: #b3c0d1;
   color: #333;
