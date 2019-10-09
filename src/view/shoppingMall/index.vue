@@ -72,7 +72,7 @@
                 <el-pagination
                 background
                 layout="prev, pager, next"
-                :total="100">
+                :total="totalSaleNumber">
               </el-pagination>
              </div>
         </el-tab-pane>
@@ -138,7 +138,7 @@
                 <el-pagination
                 background
                 layout="prev, pager, next"
-                :total="100">
+                :total="totalSoldoutNumber">
               </el-pagination>
              </div>
         </el-tab-pane>
@@ -160,7 +160,10 @@
         // 筛选条件
         productName:'',
         productType:'',
-        pageNumber:0,
+        pageSaleNumber:0,
+        pageSoldoutNumber:0,
+        totalSaleNumber:0,
+        totalSoldoutNumber:0,
         pageSize:10,
         tableSale:null,
         tableSoldout:null,
