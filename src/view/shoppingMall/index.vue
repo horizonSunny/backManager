@@ -127,7 +127,7 @@
                 <el-table-column
                   prop="address"
                   label="操作">
-                  <div class="operate"><span>编辑</span> | <span>下架</span></div>
+                  <div class="operate"><span>编辑</span></div>
                 </el-table-column>
               </el-table>
              
