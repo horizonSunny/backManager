@@ -27,8 +27,13 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
     children: [
+      {
+        path: '/',
+        redirect: 'shoppingMall',
+        component: () => import('@/view/shoppingMall/index'),
+        name: 'shoppingMall'
+      },
       {
         path: 'shoppingMall',
         component: () => import('@/view/shoppingMall/index'),
