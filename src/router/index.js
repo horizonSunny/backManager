@@ -31,8 +31,7 @@ export const constantRoutes = [
       {
         path: '/',
         redirect: 'shoppingMall',
-        component: () => import('@/view/shoppingMall/index'),
-        name: 'shoppingMall'
+        component: () => import('@/view/shoppingMall/index')
       },
       {
         path: 'shoppingMall',
