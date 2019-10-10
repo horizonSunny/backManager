@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div  class="text-box">
     <el-tabs v-model="activeName">
     <el-tab-pane label="填写商品信息" name="first">
       <el-form ref="form" :model="form" label-width="100px">
@@ -136,18 +136,22 @@
   };
 </script>
 
-<style>
-  .avatar-uploader  .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
+<style scoped lang="scss">
+.text-box{
+  /deep/ .avatar-uploader{
+     height: 100px;
+    /deep/ .el-upload {
+      border: 1px dashed #d9d9d9;
+      border-radius: 6px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    /deep/  .el-upload:hover {
+        border-color: #409EFF;
+      }
   }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-  }
-  .avatar-uploader-icon {
+  /deep/ .avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
     width: 100px;
@@ -155,18 +159,18 @@
     line-height: 100px;
     text-align: center;
   }
-  .avatar-uploader {
-    height: 100px;
-  }
-  .avatar {
+  /deep/ .avatar {
     width: 100px;
     height: 100px;
     display: block;
   }
-  .el-tabs__nav .el-tabs__active-bar{
-    background-color: #E4E7ED;
+  /deep/ .el-tabs__nav{
+    /deep/ .el-tabs__active-bar{
+      background-color: #E4E7ED;
+    }
   }
-  .el-tabs__item.is-active {
-    color:#303133;
-  }
+  /deep/ .el-tabs__item.is-active {
+      color:#303133;
+    }
+}
 </style>
