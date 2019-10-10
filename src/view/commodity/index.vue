@@ -55,8 +55,24 @@
         <el-form-item label="上架时间">
           <el-col :span="11">
                <el-radio-group v-model="form.resource">
-                  <el-radio label="线上品牌商赞助"></el-radio>
-                  <el-radio label="线下场地免费"></el-radio>
+                  <div>
+                    <el-radio label="立即上架"></el-radio>
+                  </div>
+                   <div style="display:flex;align-items:center">
+                     <el-radio label="定时上架"></el-radio>
+                     <div class="block">
+                        <span class="demonstration">默认</span>
+                        <el-date-picker
+                          v-model="valueTime"
+                          type="datetime"
+                          size="small"
+                          placeholder="选择日期时间">
+                        </el-date-picker>
+                      </div>
+                  </div>
+                   <div>
+                    <el-radio label="暂不上架"></el-radio>
+                  </div>
                 </el-radio-group>
           </el-col>
         </el-form-item>
@@ -90,7 +106,8 @@
           resource: '',
           desc: ''
         },
-        imageUrl: ''
+        imageUrl: '',
+        valueTime:''
  
       };
     },
