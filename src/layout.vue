@@ -2,7 +2,7 @@
   <div class="main">
     <el-container style="height: 100%; border: 1px solid #eee">
       <el-aside width="200px" style="background-color: rgb(238, 241, 246);">
-        <el-menu  >
+        <el-menu>
           <el-menu-item
             v-for="(item, indexInfo) in sidebarInfo"
             :key="indexInfo"
@@ -51,9 +51,9 @@ export default {
         { name: '优惠券', routePath: 'discountCoupon' },]
     }
   },
-  methods:{
-    sidebarClick(e){
-      console.log('e_',e)
+  methods: {
+    sidebarClick (e) {
+      console.log('e_', e)
       this.$router.push(e.routePath)
     }
   }
