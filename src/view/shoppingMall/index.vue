@@ -130,9 +130,6 @@
                   <div class="operate"><span>编辑</span></div>
                 </el-table-column>
               </el-table>
-             
-             
-             
              </div>
              <div class="pagination">
                 <el-pagination
