@@ -55,7 +55,7 @@ export const constantRoutes = [
       },
       {
         path: 'discountCoupon',
-        component: () => import('@/view/shoppingMall/index'),
+        component: () => import('@/view/discountCoupon/index'),
         name: 'discountCoupon'
       }
     ]
