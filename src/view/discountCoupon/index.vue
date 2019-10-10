@@ -1,5 +1,10 @@
 <template>
   <div class="text-box">
+    <div class="choose">
+      <el-button size="small" style="margin-left:20px" @click="confirmNew"
+        >新建优惠券</el-button
+      >
+    </div>
     <el-tabs v-model="activeName">
       <el-tab-pane label="优惠券" name="first"> </el-tab-pane>
     </el-tabs>
@@ -88,23 +93,9 @@ export default {
     };
   },
   methods: {
-    confirmSelect () {
-      const params = {
-        pageNumber: 0,
-        pageSize: 10,
-        productName: this.productName,
-        productType: this.productType,
-        status: this.activeName === 'sale' ? 1 : 0
-      }
-      this.$http.get('/admin/product', { params }).then((resp) => {
-        // console.log('resp_',resp)
-        if (this.activeName === 'sale') {
-          this.tableSale = resp.data.pageList
-        } else {
-          this.tableSoldout = resp.data.pageList
-        }
-        this.pageNumber = resp.data.pageNumber
-      })
+    confirmNew () {
+      console.log('confirmNew');
+      this.$router.push('newCoupon')
     }
   },
   filters: {
@@ -126,6 +117,13 @@ export default {
 
 <style scoped lang="scss">
 .text-box {
+  .choose {
+    position: relative;
+    left: 50%;
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+  }
   /deep/ .el-tabs__nav {
     /deep/ .el-tabs__active-bar {
       background-color: #e4e7ed;
