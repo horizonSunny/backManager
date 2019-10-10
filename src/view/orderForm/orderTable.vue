@@ -1,27 +1,38 @@
 <template>
-  <div>
+  <div class="main">
     <div class="choose">
-      <el-select
-        v-model="productType"
-        placeholder="请选择"
-        style="margin-left:20px"
-      >
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
+      <el-form ref="form" :model="form" label-width="80px">
+        <div style="display:flex">
+          <el-form-item label="订单号">
+            <el-input v-model="form.orderNumber"></el-input>
+          </el-form-item>
+          <el-form-item label="下单时间">
+            <el-date-picker
+              v-model="value1"
+              type="datetimerange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+            >
+            </el-date-picker>
+          </el-form-item>
+        </div>
+        <div style="display:flex">
+          <el-form-item label="商品名称">
+            <el-input v-model="form.orderNumber"></el-input>
+          </el-form-item>
+        </div>
+        <el-button
+          style="margin-left:100px;width:100px"
+          @confirm="confirmSelect()"
+          >查询订单</el-button
         >
-        </el-option>
-      </el-select>
-      <el-input
-        v-model="productName"
-        placeholder="请输入内容"
-        style="width:200px;margin-left:20px"
-      ></el-input>
-      <el-button style="margin-left:20px" @confirm="confirmSelect()"
-        >搜索</el-button
-      >
+        <el-button
+          style="margin-left:50px; width:100px"
+          @confirm="confirmSelect()"
+          >重置</el-button
+        >
+      </el-form>
     </div>
     <div class="showTable">
       <el-table :data="tableSale" style="width: 100%">
@@ -96,6 +107,10 @@ export default {
       pageSize: 10,
       tableSale: null,
       tableSoldout: null,
+      //form
+      form: {
+        name: ''
+      }
     };
   },
   methods: {
@@ -135,4 +150,33 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.main {
+  position: relative;
+  .sale {
+    .showTable {
+      height: 90%;
+      overflow: auto;
+      overflow-x: hidden;
+      .shopping {
+        display: flex;
+        .shoppingInfo {
+          margin-left: 10px;
+        }
+      }
+      .operate {
+        span {
+          cursor: pointer;
+          color: rgb(52, 136, 255);
+        }
+      }
+    }
+    .pagination {
+      width: 100%;
+      position: fixed;
+      bottom: 20px;
+      text-align: center;
+      left: 0px;
+    }
+  }
+}
 </style>
