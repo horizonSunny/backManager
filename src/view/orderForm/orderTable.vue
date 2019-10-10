@@ -4,11 +4,12 @@
       <el-form ref="form" :model="form" label-width="80px">
         <div style="display:flex">
           <el-form-item label="订单号">
-            <el-input v-model="form.orderNumber"></el-input>
+            <el-input size="small" v-model="form.orderNumber"></el-input>
           </el-form-item>
           <el-form-item label="下单时间">
             <el-date-picker
-              v-model="value1"
+              v-model="form.orderNumber"
+              size="small"
               type="datetimerange"
               range-separator="至"
               start-placeholder="开始日期"
@@ -19,17 +20,19 @@
         </div>
         <div style="display:flex">
           <el-form-item label="商品名称">
-            <el-input v-model="form.orderNumber"></el-input>
+            <el-input v-model="form.orderNumber" size="small"></el-input>
           </el-form-item>
         </div>
         <el-button
           style="margin-left:100px;width:100px"
           @confirm="confirmSelect()"
+          size="small"
           >查询订单</el-button
         >
         <el-button
           style="margin-left:50px; width:100px"
           @confirm="confirmSelect()"
+          size="small"
           >重置</el-button
         >
       </el-form>
@@ -152,30 +155,29 @@ export default {
 <style lang="scss" scoped>
 .main {
   position: relative;
-  .sale {
-    .showTable {
-      height: 90%;
-      overflow: auto;
-      overflow-x: hidden;
-      .shopping {
-        display: flex;
-        .shoppingInfo {
-          margin-left: 10px;
-        }
-      }
-      .operate {
-        span {
-          cursor: pointer;
-          color: rgb(52, 136, 255);
-        }
+  .showTable {
+    height: 90%;
+    overflow: auto;
+    overflow-x: hidden;
+    .shopping {
+      display: flex;
+      .shoppingInfo {
+        margin-left: 10px;
       }
     }
-    .pagination {
-      width: 100%;
-      position: fixed;
-      bottom: 20px;
+    .operate {
+      span {
+        cursor: pointer;
+        color: rgb(52, 136, 255);
+      }
+    }
+  }
+  .pagination {
+    width: 100%;
+    margin-top: 20px;
+    text-align: center;
+    /deep/ .el-pagination {
       text-align: center;
-      left: 0px;
     }
   }
 }
