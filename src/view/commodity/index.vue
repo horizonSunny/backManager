@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-tabs v-model="activeName">
-    <el-tab-pane label="第一步：填写商品信息" name="first">
+    <el-tab-pane label="填写商品信息" name="first">
       <el-form ref="form" :model="form" label-width="100px">
         <el-form-item label="商品名称">
           <el-col :span="11">
@@ -32,8 +32,8 @@
         <el-form-item label="商品分组">
           <el-col :span="11">
             <el-select v-model="form.region" placeholder="请选择活动区域">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
+              <el-option label="处方药" value="0"></el-option>
+              <el-option label="非处方药" value="1"></el-option>
             </el-select>
           </el-col>
         </el-form-item>
@@ -87,7 +87,6 @@
         </el-form-item>
       </el-form>
     </el-tab-pane>
-    <el-tab-pane label="第二步：运营选项编辑" name="second"></el-tab-pane>
   </el-tabs>
   </div>
 </template>
@@ -163,5 +162,11 @@
     width: 100px;
     height: 100px;
     display: block;
+  }
+  .el-tabs__nav .el-tabs__active-bar{
+    background-color: #E4E7ED;
+  }
+  .el-tabs__item.is-active {
+    color:#303133;
   }
 </style>
