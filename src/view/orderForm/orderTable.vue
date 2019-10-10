@@ -22,19 +22,21 @@
           <el-form-item label="商品名称">
             <el-input v-model="form.orderNumber" size="small"></el-input>
           </el-form-item>
+          <el-form-item label="商品名称">
+            <el-button
+              style="margin-left:100px;width:100px"
+              @confirm="confirmSelect()"
+              size="small"
+              >查询订单</el-button
+            >
+            <el-button
+              style="margin-left:50px; width:100px"
+              @confirm="confirmSelect()"
+              size="small"
+              >重置</el-button
+            >
+          </el-form-item>
         </div>
-        <el-button
-          style="margin-left:100px;width:100px"
-          @confirm="confirmSelect()"
-          size="small"
-          >查询订单</el-button
-        >
-        <el-button
-          style="margin-left:50px; width:100px"
-          @confirm="confirmSelect()"
-          size="small"
-          >重置</el-button
-        >
       </el-form>
     </div>
     <div class="showTable">
@@ -174,7 +176,9 @@ export default {
   }
   .pagination {
     width: 100%;
-    margin-top: 20px;
+    position: fixed;
+    bottom: 20px;
+    left: 0px;
     text-align: center;
     /deep/ .el-pagination {
       text-align: center;
