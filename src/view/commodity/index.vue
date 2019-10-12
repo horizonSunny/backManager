@@ -2,69 +2,90 @@
   <div class="text-box">
     <el-tabs v-model="activeName">
       <el-tab-pane label="填写商品信息" name="first">
-        <el-form ref="form" :model="form" label-width="100px">
-          <el-form-item label="商品名称">
+        <el-form
+          ref="ruleForm"
+          :model="ruleForm"
+          :rules="rules"
+          label-width="100px"
+        >
+          <el-form-item label="商品名称" prop="productName">
             <el-col :span="11">
-              <el-input v-model="form.name"></el-input>
+              <el-input
+                v-model="ruleForm.productName"
+                maxlength="30"
+              ></el-input>
             </el-col>
           </el-form-item>
-          <el-form-item label="商品封面">
+          <el-form-item label="商品封面" prop="image">
             <el-upload
-              class="avatar-uploader"
               action="https://jsonplaceholder.typicode.com/posts/"
-              :show-file-list="false"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload"
+              list-type="picture-card"
+              :on-change="handlePictureCard"
+              :auto-upload="false"
+              :limit="1"
             >
-              <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              <i class="el-icon-plus"></i>
             </el-upload>
+            <!-- <el-dialog :visible.sync="dialogVisible" size="tiny">
+              <img width="100%" :src="dialogImageUrl" alt="" />
+            </el-dialog> -->
           </el-form-item>
-          <el-form-item label="生产厂家">
+          <el-form-item label="生产厂家" prop="manufacturer">
             <el-col :span="11">
-              <el-input v-model="form.name"></el-input>
+              <el-input
+                v-model="ruleForm.manufacturer"
+                maxlength="30"
+              ></el-input>
             </el-col>
           </el-form-item>
-          <el-form-item label="描述">
+          <el-form-item label="描述" prop="describe">
             <el-col :span="11">
-              <el-input v-model="form.name"></el-input>
+              <el-input v-model="ruleForm.describe" maxlength="80"></el-input>
             </el-col>
           </el-form-item>
-          <el-form-item label="商品分组">
+          <el-form-item label="商品分组" prop="productType">
             <el-col :span="11">
-              <el-select v-model="form.region" placeholder="请选择活动区域">
-                <el-option label="处方药" value="0"></el-option>
-                <el-option label="非处方药" value="1"></el-option>
+              <el-select
+                v-model="ruleForm.productType"
+                placeholder="请选择活动区域"
+              >
+                <el-option label="处方药" :value="0"></el-option>
+                <el-option label="非处方药" :value="1"></el-option>
               </el-select>
             </el-col>
           </el-form-item>
-          <el-form-item label="价格">
+          <el-form-item label="价格" prop="price">
             <el-col :span="11">
-              <el-input v-model="form.name"></el-input>
+              <el-input v-model="ruleForm.price"></el-input>
             </el-col>
           </el-form-item>
-          <el-form-item label="删除线价格">
+          <el-form-item label="删除线价格" prop="vipPrice">
             <el-col :span="11">
-              <el-input v-model="form.name"></el-input>
+              <el-input v-model="ruleForm.vipPrice"></el-input>
             </el-col>
           </el-form-item>
-          <el-form-item label="库存">
+          <el-form-item label="产品规格" prop="productSpecif">
             <el-col :span="11">
-              <el-input v-model="form.name"></el-input>
+              <el-input v-model="ruleForm.productSpecif"></el-input>
             </el-col>
           </el-form-item>
-          <el-form-item label="上架时间">
+          <el-form-item label="库存" prop="stock">
             <el-col :span="11">
-              <el-radio-group v-model="form.resource">
+              <el-input v-model="ruleForm.stock"></el-input>
+            </el-col>
+          </el-form-item>
+          <el-form-item label="上架时间" prop="isShow">
+            <el-col :span="11">
+              <el-radio-group v-model="ruleForm.isShow">
                 <div>
-                  <el-radio label="立即上架"></el-radio>
+                  <el-radio :label="1">立即上架</el-radio>
                 </div>
                 <div style="display:flex;align-items:center">
-                  <el-radio label="定时上架"></el-radio>
+                  <el-radio :label="2">定时上架</el-radio>
                   <div class="block">
                     <span class="demonstration">默认</span>
                     <el-date-picker
-                      v-model="valueTime"
+                      v-model="ruleForm.shelfTime"
                       type="datetime"
                       size="small"
                       placeholder="选择日期时间"
@@ -73,21 +94,26 @@
                   </div>
                 </div>
                 <div>
-                  <el-radio label="暂不上架"></el-radio>
+                  <el-radio :label="0">暂不上架</el-radio>
                 </div>
               </el-radio-group>
             </el-col>
           </el-form-item>
-          <el-form-item label="商品详情">
+          <el-form-item label="商品详情" prop="producInfo">
             <el-col :span="11">
-              <el-input type="textarea" v-model="form.resource"></el-input>
+              <el-input
+                type="textarea"
+                v-model="ruleForm.producInfo"
+              ></el-input>
             </el-col>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit" style="width:100px"
               >下一步</el-button
             >
-            <el-button style="width:100px">重置</el-button>
+            <el-button style="width:100px" @click="resetruleForm('ruleForm')"
+              >重置</el-button
+            >
           </el-form-item>
         </el-form>
       </el-tab-pane>
@@ -95,44 +121,77 @@
   </div>
 </template>
 <script>
+// import { ruleFormatDateTime } from '@/utils/ruleFormatDateTime'
 export default {
   data () {
     return {
       activeName: 'first',
-      form: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+      ruleForm: {
+        productName: '',
+        image: '',
+        manufacturer: '',
+        describe: '',
+        productType: '',
+        price: '',
+        vipPrice: '',
+        productSpecif: '',
+        stock: '',
+        isShow: '',
+        shelfTime: '',
+        producInfo: ''
       },
-      imageUrl: '',
-      valueTime: ''
-
+      rules: {
+        productName: [
+          { required: true, message: '请输入商品名称', trigger: 'blur' },
+          { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
+        ],
+        image: [
+          { required: true, message: '请选择商品图片', trigger: 'blur' }
+        ],
+        manufacturer: [
+          { required: true, message: '请填写生产厂家', trigger: 'blur' }
+        ],
+        describe: [
+          { required: true, message: '请填写商品描述', trigger: 'blur' }
+        ],
+        productType: [
+          { required: true, message: '请选择商品类别', trigger: 'blur' }
+        ],
+        price: [
+          { required: true, message: '请填写商品价格', trigger: 'blur' }
+        ],
+        vipPrice: [
+          { required: true, message: '请填写折扣价格', trigger: 'blur' }
+        ],
+        productSpecif: [
+          { required: true, message: '请填写商品规格', trigger: 'blur' }
+        ],
+        stock: [
+          { required: true, message: '请填写商品库存', trigger: 'blur' }
+        ],
+        isShow: [
+          { required: true, message: '请选择商品上架时间', trigger: 'blur' }
+        ],
+        producInfo: [
+          { required: true, message: '请填写商品详情', trigger: 'blur' }
+        ],
+      }
     };
   },
   methods: {
     onSubmit () {
-      console.log('submit!');
+      console.log('this.ruleForm_', this.ruleForm)
+      // const time = ruleFormatDateTime(this.ruleForm.shelfTime, 'yyyy-MM-dd hh:mm:ss')
+      // console.log('this.ruleForm.time_', time)
     },
     // 上传图片
-    handleAvatarSuccess (res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
+    handlePictureCard (file) {
+      this.ruleForm.image = file.raw
+      console.log('file.url_', this.ruleForm.image);
     },
-    beforeAvatarUpload (file) {
-      const isJPG = file.type === 'image/jpeg';
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!');
-      }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!');
-      }
-      return isJPG && isLt2M;
+    resetruleForm (ruleFormName) {
+      console.log(this.$refs[ruleFormName]);
+      this.$refs[ruleFormName].resetFields();
     }
   },
   created () {

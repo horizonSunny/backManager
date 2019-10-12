@@ -138,6 +138,7 @@
   </div>
 </template>
 <script>
+import { getProduct } from '@/api/index'
 export default {
   data () {
     return {
@@ -170,15 +171,14 @@ export default {
         productType: this.productType,
         status: this.activeName === 'sale' ? 1 : 0
       }
-      // this.$http.get('/admin/product', { params }).then((resp) => {
-      //   // console.log('resp_',resp)
-      //   if (this.activeName === 'sale') {
-      //     this.tableSale = resp.data.pageList
-      //   } else {
-      //     this.tableSoldout = resp.data.pageList
-      //   }
-      //   this.pageNumber = resp.data.pageNumber
-      // })
+      getProduct(params).then((resp) => {
+        if (this.activeName === 'sale') {
+          this.tableSale = resp.data.pageList
+        } else {
+          this.tableSoldout = resp.data.pageList
+        }
+        this.pageNumber = resp.data.pageNumber
+      })
     }
   },
   filters: {
