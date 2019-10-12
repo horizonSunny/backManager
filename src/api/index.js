@@ -60,7 +60,7 @@ export function newProduct(params) {
   return formRequest({
     url: 'admin/product',
     method: 'post',
-    data: qs.stringify(params)
+    data: params
   })
 }
 // 编辑产品

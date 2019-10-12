@@ -207,11 +207,19 @@ export default {
         return false
       }
       const params = this.ruleForm
-      console.log('params_omg_', params.img);
       if (this.ruleForm.isShow === 2) {
-        params.shelfTime = formatDateTime(this.ruleForm.shelfTime, 'yyyy-MM-dd hh:mm:ss')
+        // const time  = formatDateTime(this.ruleForm.shelfTime, 'yyyy-MM-dd hh:mm:ss')
+        params.shelfTime = new Date(this.ruleForm.shelfTime).getTime();
       }
-      newProduct(params).then(() => {
+      params.file = params.image
+      // 建立new formdata 
+      const formData = new FormData()
+      for (let item in params) {
+        // console.log('item_', item);
+        // console.log('item_', params[item]);
+        formData.append(item, params[item])
+      }
+      newProduct(formData).then(() => {
         console.log('发送成功');
       })
     },
