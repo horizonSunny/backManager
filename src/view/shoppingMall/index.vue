@@ -170,15 +170,15 @@ export default {
         productType: this.productType,
         status: this.activeName === 'sale' ? 1 : 0
       }
-      this.$http.get('/admin/product', { params }).then((resp) => {
-        // console.log('resp_',resp)
-        if (this.activeName === 'sale') {
-          this.tableSale = resp.data.pageList
-        } else {
-          this.tableSoldout = resp.data.pageList
-        }
-        this.pageNumber = resp.data.pageNumber
-      })
+      // this.$http.get('/admin/product', { params }).then((resp) => {
+      //   // console.log('resp_',resp)
+      //   if (this.activeName === 'sale') {
+      //     this.tableSale = resp.data.pageList
+      //   } else {
+      //     this.tableSoldout = resp.data.pageList
+      //   }
+      //   this.pageNumber = resp.data.pageNumber
+      // })
     }
   },
   filters: {
@@ -190,10 +190,10 @@ export default {
     const params =
     {      pageNumber: 0,
       pageSize: 10    }
-    this.$http.get('/admin/product', { params }).then((resp) => {
-      console.log('resp_', resp)
-      this.tableSale = resp.data.pageList
-    })
+    // this.$http.get('/admin/product', { params }).then((resp) => {
+    //   console.log('resp_', resp)
+    //   this.tableSale = resp.data.pageList
+    // })
   }
 };
 </script>
