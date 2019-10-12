@@ -228,8 +228,19 @@ export default {
       }
     }
   },
+<<<<<<< HEAD
   mounted () {
     this.getList()
+=======
+  created () {
+    const params =
+    {      pageNumber: 0,
+      pageSize: 10    }
+    // this.$http.get('/admin/product', { params }).then((resp) => {
+    //   console.log('resp_', resp)
+    //   this.tableSale = resp.data.pageList
+    // })
+>>>>>>> b18ed01358f05df312b96a3f0e4a7afa6cb21a6e
   }
 }
 </script>
