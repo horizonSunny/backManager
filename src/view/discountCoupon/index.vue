@@ -10,46 +10,36 @@
     </el-tabs>
     <div class="showTable">
       <el-table :data="tableSale" style="width: 100%">
-        <el-table-column label="商品" width="180">
+        <el-table-column label="名称" prop="couponName"></el-table-column>
+        <el-table-column label="使用规则" width="160">
           <template slot-scope="scope">
-            <div class="shopping">
-              <img :src="scope.row.image" style="width:70px;height:70px" />
-              <div class="shoppingInfo">
-                <div>{{ scope.row.productName }}</div>
-                <div>¥{{ scope.row.price }}</div>
-              </div>
-            </div>
+            <div>①不限制使用门槛</div>
+            <div>②所有人可领取</div>
+            <div>③商品限制:所有商品</div>
           </template>
         </el-table-column>
-        <el-table-column label="分组" width="180">
+        <el-table-column label="有效期" width="360">
           <template slot-scope="scope">
-            <span style="">{{ scope.row.productType | productType }}</span>
+            <div>{{ scope.row.startTime }} 至 {{ scope.row.endTime }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="访问统计">
+        <el-table-column label="状态">
           <template slot-scope="scope">
-            <div>总流量次数: {{ scope.row.browse ? scope.row.browse : 0 }}</div>
-            <div>独立用户: {{ scope.row.browse ? scope.row.browse : 0 }}</div>
-            <div>新用户: {{ scope.row.browse ? scope.row.browse : 0 }}</div>
+            <div>{{ scope.row.status | productType }}</div>
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="销售统计">
+        <el-table-column label="发放数量" prop="totalCount"></el-table-column>
+        <el-table-column label="使用数量">
           <template slot-scope="scope">
-            <div>库存:{{ scope.row.stock ? scope.row.stock : 0 }}</div>
-            <div>已销售:{{ scope.row.sales ? scope.row.sales : 0 }}</div>
+            <div>{{ scope.row.totalCount - scope.row.remainCount  }}</div>
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="创建时间">
-          <template slot-scope="scope">
-            <div>{{ scope.row.createTime }}</div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="address" label="操作">
-          <div class="operate"><span>编辑</span> | <span>下架</span></div>
+        <el-table-column label="操作">
+          <div class="operate"><el-button type='text'>停用</el-button></div>
         </el-table-column>
       </el-table>
     </div>
-    <div class="pagination">
+    <div class="pagination" v-show="totalSaleNumber>0">
       <el-pagination
         background
         layout="prev, pager, next"
@@ -60,6 +50,7 @@
   </div>
 </template>
 <script>
+import { getCouponList } from '@/api/index.js'
 export default {
   data () {
     return {
@@ -100,17 +91,34 @@ export default {
   },
   filters: {
     productType: function (value) {
-      return value === 0 ? '处方药' : '非处方药'
+      // 0：未激活，1：激活，2：已过期或者发放完毕
+      let temp = ''
+      if (value === 0) {
+        return '未激活'
+      } else if (value === 1) {
+        return '未激活'
+      } else {
+        return '已过期或者发放完毕'
+      }
     }
   },
-  created () {
-    const params =
-    {      pageNumber: 0,
-      pageSize: 10    }
-    this.$http.get('/admin/product', { params }).then((resp) => {
-      console.log('resp_', resp)
-      this.tableSale = resp.data.pageList
-    })
+  mounted () {
+    const params = {      
+      pageNumber: 0,
+      pageSize: 10
+    }
+    getCouponList(params).then(
+      (data) => {
+        if (data.code === 1) {
+          this.tableSale = data.data.pageList
+        } else {
+          this.$message({
+            message: data.msg,
+            type: 'error'
+          })
+        }
+      }
+    )
   }
 };
 </script>

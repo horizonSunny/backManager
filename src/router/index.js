@@ -9,11 +9,12 @@ import Layout from '@/layout'
 /* Router Modules */
 
 export const constantRoutes = [
-  // {
-  //   path: '/login',
-  //   component: () => import('@/view/login/index'),
-  //   hidden: true
-  // },
+  {
+    path: '/',
+    name: 'login',
+    component: () => import('@/view/login/index.vue'),
+    hidden: true
+  },
   // {
   //   path: '/404',
   //   component: () => import('@/view/error-page/404'),
@@ -25,18 +26,14 @@ export const constantRoutes = [
   //   hidden: true
   // },
   {
-    path: '/',
+    path: '',
     component: Layout,
+    redirect: 'shoppingMall',
     children: [
       {
-        path: '/',
-        redirect: 'shoppingMall',
+        path: '/shoppingMall',
+        name: 'shoppingMall',
         component: () => import('@/view/shoppingMall/index')
-      },
-      {
-        path: 'shoppingMall',
-        component: () => import('@/view/shoppingMall/index'),
-        name: 'shoppingMall'
       },
       {
         path: 'commodity',
