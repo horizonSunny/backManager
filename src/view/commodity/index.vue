@@ -56,12 +56,12 @@
           </el-form-item>
           <el-form-item label="价格" prop="price">
             <el-col :span="11">
-              <el-input v-model="ruleForm.price"></el-input>
+              <el-input v-model.number="ruleForm.price"></el-input>
             </el-col>
           </el-form-item>
           <el-form-item label="删除线价格" prop="vipPrice">
             <el-col :span="11">
-              <el-input v-model="ruleForm.vipPrice"></el-input>
+              <el-input v-model.number="ruleForm.vipPrice"></el-input>
             </el-col>
           </el-form-item>
           <el-form-item label="产品规格" prop="productSpecif">
@@ -71,7 +71,7 @@
           </el-form-item>
           <el-form-item label="库存" prop="stock">
             <el-col :span="11">
-              <el-input v-model="ruleForm.stock"></el-input>
+              <el-input v-model.number="ruleForm.stock"></el-input>
             </el-col>
           </el-form-item>
           <el-form-item label="上架时间" prop="isShow">
@@ -126,6 +126,7 @@
 <script>
 import { formatDateTime } from '@/utils/formatDateTime.js'
 import validate from '@/utils/validate.js'
+import { newProduct, editProduct } from '@/api/index.js'
 export default {
   data () {
     return {
@@ -162,16 +163,19 @@ export default {
           { required: true, message: '请选择商品类别', trigger: 'blur' }
         ],
         price: [
-          { required: true, message: '请填写商品价格', trigger: 'blur' }
+          { required: true, message: '请填写商品价格', trigger: 'blur' },
+          { type: 'number', message: '商品价格为数字' }
         ],
         vipPrice: [
-          { required: true, message: '请填写折扣价格', trigger: 'blur' }
+          { required: true, message: '请填写折扣价格', trigger: 'blur' },
+          { type: 'number', message: '折扣价格为数字' }
         ],
         productSpecif: [
           { required: true, message: '请填写商品规格', trigger: 'blur' }
         ],
         stock: [
-          { required: true, message: '请填写商品库存', trigger: 'blur' }
+          { required: true, message: '请填写商品库存', trigger: 'blur' },
+          { type: 'number', message: '库存为数字' }
         ],
         isShow: [
           { required: true, message: '请选择商品上架时间', trigger: 'blur' }
@@ -186,15 +190,30 @@ export default {
     onSubmit (formName) {
       console.log('this.ruleForm_', this.ruleForm)
       // const time = formatDateTime(this.ruleForm.shelfTime, 'yyyy-MM-dd hh:mm:ss')
-      // console.log('this.ruleForm.time_', time)
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!');
+          console.log('success')
         } else {
           console.log('error submit!!');
           return false;
         }
       });
+      let Rules = [
+        { name: 'shelfTime', type: 'required', errmsg: '请选择商品上架时间' }
+      ]
+      let valLoginRes = validate.validate(this.ruleForm, Rules)
+      if (!valLoginRes.isOk && this.ruleForm.isShow === 2) {
+        this.$message.error('请选择商品上架时间');
+        return false
+      }
+      const params = this.ruleForm
+      console.log('params_omg_', params.img);
+      if (this.ruleForm.isShow === 2) {
+        params.shelfTime = formatDateTime(this.ruleForm.shelfTime, 'yyyy-MM-dd hh:mm:ss')
+      }
+      newProduct(params).then(() => {
+        console.log('发送成功');
+      })
     },
     // 选择图片
     handlePictureCard (file) {
