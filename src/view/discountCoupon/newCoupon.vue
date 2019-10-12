@@ -2,48 +2,48 @@
   <div class="text-box">
     <el-tabs v-model="activeName">
       <el-tab-pane label="新建优惠券" name="first">
-        <el-form ref="form" :model="form" label-width="100px">
-          <el-form-item label="优惠券名称">
+        <el-form ref="form" :rules="rules" :model="form" label-width="100px">
+          <el-form-item label="优惠券名称" prop="couponName">
             <el-col :span="11">
               <el-input v-model="form.couponName"></el-input>
             </el-col>
           </el-form-item>
-          <el-form-item label="发送总量">
+          <el-form-item label="发送总量" prop="totalCount">
             <el-col :span="11">
               <el-input v-model="form.totalCount" type="number"></el-input>
             </el-col>
           </el-form-item>
-          <el-form-item label="优惠方式">
+          <el-form-item label="优惠方式" prop="couponType">
             <el-col :span="11">
               <div>
                 <el-radio-group v-model="form.couponType">
-                  <el-radio label="0">
+                  <el-radio label="0">无门槛</el-radio>
+                  <el-radio label="1">
                     <span>
                       <span>满减券</span>
-                      <span> 满 <el-input v-model="form.useMinPrice" type="number" style="width: 100px;"></el-input> 可使用</el-input></span>
+                      <span> 满 <el-input v-model="form.useMinPrice" type="number" style="width: 100px;"></el-input> 可使用</span>
                     </span>
                   </el-radio>
-                  <el-radio label="1">无门槛</el-radio>
                 </el-radio-group>
               </div>
             </el-col>
           </el-form-item>
-          <el-form-item label="优惠券面值">
+          <el-form-item label="优惠券面值" prop="couponPrice">
             <el-col :span="11">
               <el-input type="number"  v-model="form.couponPrice"></el-input>
             </el-col>
           </el-form-item>
-          <el-form-item label="领取数限制">
+          <el-form-item label="领取数限制" prop="quantityLimit">
             <el-col :span="11">
               <el-input v-model="form.quantityLimit" type="number"></el-input>
             </el-col>
           </el-form-item>
-          <el-form-item label="生效日期">
+          <el-form-item label="生效日期" prop="useTime">
             <el-col :span="11">
               <!-- <el-input v-model="form.startTime"></el-input> -->
               <el-date-picker
                 style="width: 100%;"
-                v-model="useTime"
+                v-model="form.useTime"
                 type="datetimerange"
                 range-separator="至"
                 start-placeholder="开始日期"
@@ -53,7 +53,7 @@
               </el-date-picker>
             </el-col>
           </el-form-item>
-          <el-form-item label="可使用商品">
+          <el-form-item label="可使用商品" prop="productType">
             <el-col :span="11">
               <div>
                 <el-radio-group v-model="form.productType">
@@ -78,7 +78,7 @@
             </el-col>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="onSubmit" style="width:100px">确定</el-button>
+            <el-button type="primary" :loading="loading" @click="onSubmit" style="width:100px">确定</el-button>
             <el-button style="width:100px" @click="goBack">返回</el-button>
           </el-form-item>
         </el-form>
@@ -87,7 +87,7 @@
   </div>
 </template>
 <script>
-import { getProduct } from '@/api/index.js'
+import { getProduct, insertCoupon, updateCoupon } from '@/api/index.js'
 export default {
   data () {
     return {
@@ -102,10 +102,34 @@ export default {
         "totalCount": "",
         "usableGoods": "",
         "useMinPrice": "",
-        "productType": "0"
+        "productType": "0",
+        "useTime": ''
+      },
+      rules: {
+        couponName: [
+          { required: true, message: '请输入优惠券', trigger: 'blur' },
+        ],
+        totalCount: [
+          { required: true, message: '请输入发送总量', trigger: 'blur' },
+        ],
+        couponType: [
+          { required: true, message: '请输入优惠方式', trigger: 'blur' },
+        ],
+        couponPrice: [
+          { required: true, message: '请输入优惠券面值', trigger: 'blur' },
+        ],
+        quantityLimit: [
+          { required: true, message: '请输入领取数量限制', trigger: 'blur' },
+        ],
+        useTime: [
+          { required: true, message: '请选择生效日期', trigger: 'blur' },
+        ],
+        productType: [
+          { required: true, message: '请选择限制商品', trigger: 'blur' },
+        ]
       },
       productList: [],
-      useTime: ''
+      loading: false
     };
   },
   methods: {
@@ -114,11 +138,108 @@ export default {
     },
     onSubmit () {
       console.log('submit!')
+      this.$refs['form'].validate((valid) => {
+        console.log('valid', valid)
+        if (valid) {
+          this.loading = true
+          console.log('提交的内容为:', this.form)
+          if (this.form.couponType === "0" && !this.form.useMinPrice) {
+            this.$message({
+              message: '请设置满减门槛',
+              type: 'error'
+            })
+            return false
+          }
+          if (this.form.productType === "1" && !this.form.usableGoods) {
+            this.$message({
+              message: '请选择限制使用商品',
+              type: 'error'
+            })
+            return false
+          }
+          let params = {}
+          if (this.form.id) {
+            params = {
+              "id": this.form.id,
+              "couponName": this.form.couponName,
+              "couponPrice": Number(this.form.couponPrice),
+              "couponType": Number(this.form.couponType),
+              "endTime": this.form.endTime,
+              "quantityLimit": Number(this.form.quantityLimit),
+              "startTime": this.form.startTime,
+              "totalCount": Number(this.form.totalCount),
+              "usableGoods": this.form.usableGoods ? this.form.usableGoods.toString() : '',
+              "useMinPrice": Number(this.form.useMinPrice)
+            }
+            updateCoupon(params).then(
+              data => {
+                this.loading = false
+                if (data.code === 1) {
+                  this.goBack()
+                } else {
+                  this.$message({
+                    message: data.msg,
+                    type: 'error'
+                  })
+                }
+              },
+              error => {
+                this.loading = false
+                console.log(error)
+                this.$message({
+                  message: '网络连接失败',
+                  type: 'error'
+                })
+              }
+            )
+          } else {
+            params = {
+              "couponName": this.form.couponName,
+              "couponPrice": Number(this.form.couponPrice),
+              "couponType": Number(this.form.couponType),
+              "endTime": this.form.endTime,
+              "quantityLimit": Number(this.form.quantityLimit),
+              "startTime": this.form.startTime,
+              "totalCount": Number(this.form.totalCount),
+              "usableGoods": this.form.usableGoods ? this.form.usableGoods.toString() : '',
+              "useMinPrice": Number(this.form.useMinPrice)
+            }
+            insertCoupon(params).then(
+              data => {
+                this.loading = false
+                if (data.code === 1) {
+                  this.goBack()
+                } else {
+                  this.$message({
+                    message: data.msg,
+                    type: 'error'
+                  })
+                }
+              },
+              error => {
+                this.loading = false
+                console.log(error)
+                this.$message({
+                  message: '网络连接失败',
+                  type: 'error'
+                })
+              }
+            )
+          }
+        }
+      })
     },
     dateChange (value) {
       console.log('日期选择变化:', value)
-      this.form.startTime = new Date(value[0]).getTime()/100
-      this.form.endTime = new Date(value[1]).getTime()/100
+      if (value) {
+        this.form.useTime = value
+        this.form.startTime = new Date(value[0]).getTime()/100
+        this.form.endTime = new Date(value[1]).getTime()/100
+      } else {
+        this.form.useTime = value
+        this.form.startTime = ""
+        this.form.endTime = ""
+      }
       console.log(this.form)
     },
     getProductList () {
@@ -148,6 +269,24 @@ export default {
     }
   },
   mounted () {
+    let oldData = this.$route.query.coupon
+    console.log('页面传入数据:', oldData)
+    if (oldData) {
+      oldData.couponType = oldData.couponType.toString()
+      if (oldData.usableGoods) {
+        oldData.productType = "1"
+      } else {
+        oldData.productType = "0"
+      }
+      if (oldData.startTime && oldData.endTime) {
+        this.useTime = [new Date(oldData.startTime), new Date(oldData.endTime)]
+        oldData.useTime = [new Date(oldData.startTime), new Date(oldData.endTime)]
+        oldData.startTime = new Date(oldData.startTime).getTime()/100
+        oldData.endTime = new Date(oldData.endTime).getTime()/100
+      }
+      this.form = Object.assign({},oldData)
+    }
+    console.log(this.form)
     this.getProductList()
   },
 };
