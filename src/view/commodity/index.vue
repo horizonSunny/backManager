@@ -108,7 +108,10 @@
             </el-col>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="onSubmit" style="width:100px"
+            <el-button
+              type="primary"
+              @click="onSubmit('ruleForm')"
+              style="width:100px"
               >下一步</el-button
             >
             <el-button style="width:100px" @click="resetruleForm('ruleForm')"
@@ -121,7 +124,8 @@
   </div>
 </template>
 <script>
-// import { ruleFormatDateTime } from '@/utils/ruleFormatDateTime'
+import { formatDateTime } from '@/utils/formatDateTime.js'
+import validate from '@/utils/validate.js'
 export default {
   data () {
     return {
@@ -179,12 +183,20 @@ export default {
     };
   },
   methods: {
-    onSubmit () {
+    onSubmit (formName) {
       console.log('this.ruleForm_', this.ruleForm)
-      // const time = ruleFormatDateTime(this.ruleForm.shelfTime, 'yyyy-MM-dd hh:mm:ss')
+      // const time = formatDateTime(this.ruleForm.shelfTime, 'yyyy-MM-dd hh:mm:ss')
       // console.log('this.ruleForm.time_', time)
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert('submit!');
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
     },
-    // 上传图片
+    // 选择图片
     handlePictureCard (file) {
       this.ruleForm.image = file.raw
       console.log('file.url_', this.ruleForm.image);
