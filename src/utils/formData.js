@@ -45,6 +45,11 @@ request.interceptors.response.use(
         })
         return false
       }
+      // 未知错误提示全局
+      else if (response.data.code === 0) {
+        Message(response.data.msg)
+        return Promise.reject(response)
+      }
       return response.data
     } else {
       return Promise.reject(response)

@@ -23,12 +23,10 @@
               :on-change="handlePictureCard"
               :auto-upload="false"
               :limit="1"
+              :file-list="fileList"
             >
               <i class="el-icon-plus"></i>
             </el-upload>
-            <!-- <el-dialog :visible.sync="dialogVisible" size="tiny">
-              <img width="100%" :src="dialogImageUrl" alt="" />
-            </el-dialog> -->
           </el-form-item>
           <el-form-item label="生产厂家" prop="manufacturer">
             <el-col :span="11">
@@ -85,6 +83,7 @@
                   <div class="block">
                     <span class="demonstration">默认</span>
                     <el-date-picker
+                      :disabled="ruleForm.isShow !== 2"
                       v-model="ruleForm.shelfTime"
                       type="datetime"
                       size="small"
@@ -135,22 +134,21 @@ export default {
         image: '',
         manufacturer: '',
         describe: '',
-        productType: '',
+        productType: 0,
         price: '',
         vipPrice: '',
         productSpecif: '',
         stock: '',
-        isShow: '',
+        isShow: 1,
         shelfTime: '',
         producInfo: ''
       },
+      id: '',
+      fileList: [],
       rules: {
         productName: [
           { required: true, message: '请输入商品名称', trigger: 'blur' },
           { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
-        ],
-        image: [
-          { required: true, message: '请选择商品图片', trigger: 'blur' }
         ],
         manufacturer: [
           { required: true, message: '请填写生产厂家', trigger: 'blur' }
@@ -176,36 +174,45 @@ export default {
           { required: true, message: '请填写商品库存', trigger: 'blur' },
           { type: 'number', message: '库存为数字' }
         ],
-        isShow: [
-          { required: true, message: '请选择商品上架时间', trigger: 'blur' }
-        ],
         producInfo: [
           { required: true, message: '请填写商品详情', trigger: 'blur' }
-        ],
-      }
+        ]
+      },
+      type: 'new'
     };
   },
   methods: {
     onSubmit (formName) {
-      console.log('this.ruleForm_', this.ruleForm)
+      let validateInfo = true
       this.$refs[formName].validate((valid) => {
         if (valid) {
           console.log('success')
         } else {
           console.log('error submit!!');
+          validateInfo = false
           return false;
         }
       });
+      // 校验失败返回
+      if (!validateInfo) {
+        return false
+      }
       let Rules = [
         { name: 'shelfTime', type: 'required', errmsg: '请选择商品上架时间' }
       ]
       let valLoginRes = validate.validate(this.ruleForm, Rules)
+      // 校验时间和产品图
       if (!valLoginRes.isOk && this.ruleForm.isShow === 2) {
         this.$message.error('请选择商品上架时间');
         return false
       }
+      if (this.type !== 'edit' && this.ruleForm.image === '') {
+        this.$message.error('请选择商品封面');
+        return false
+      }
+      // 
       const params = this.ruleForm
-      if (this.ruleForm.isShow === 2) {
+      if (this.ruleForm.isShow === 2 || this.ruleForm.shelfTime) {
         params.shelfTime = new Date(this.ruleForm.shelfTime).getTime();
       }
       params.file = params.image
@@ -214,9 +221,18 @@ export default {
       for (let item in params) {
         formData.append(item, params[item])
       }
-      newProduct(formData).then(() => {
-        console.log('发送成功');
-      })
+      if (this.type === 'new') {
+        newProduct(formData).then(() => {
+          this.$router.push('shoppingMall')
+          console.log('发送成功');
+        })
+      } else {
+        formData.append('id', this.id)
+        editProduct(formData).then(() => {
+          this.$router.push('shoppingMall')
+          console.log('发送成功');
+        })
+      }
     },
     // 选择图片
     handlePictureCard (file) {
@@ -229,8 +245,26 @@ export default {
     }
   },
   created () {
+    console.log('this.$route.params_', this.$route.params)
+    const productInfo = this.$route.params
+    if (JSON.stringify(productInfo) !== "{}") {
+      this.type = 'edit'
+      this.id = productInfo.id
+      this.ruleForm.productName = productInfo.productName
+      this.ruleForm.manufacturer = productInfo.manufacturer
+      this.ruleForm.describe = productInfo.describe
+      this.ruleForm.productType = productInfo.productType
+      this.ruleForm.price = productInfo.price
+      this.ruleForm.otPrice = productInfo.otPrice
+      this.ruleForm.productSpecif = productInfo.productSpecif
+      this.ruleForm.stock = productInfo.stock
+      this.ruleForm.isShow = productInfo.isShow
+      this.ruleForm.shelfTime = productInfo.shelfTime
+      this.ruleForm.producInfo = productInfo.producInfo,
+        this.fileList.push({ url: productInfo.image })
+    }
   },
-};
+}
 </script>
 
 <style scoped lang="scss">

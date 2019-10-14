@@ -130,7 +130,11 @@
               </template>
             </el-table-column>
             <el-table-column prop="address" label="操作">
-              <div class="operate"><span>编辑</span></div>
+              <template slot-scope="scope">
+                <div class="operate" @click="operate($event, scope.row)">
+                  <span>编辑</span>
+                </div>
+              </template>
             </el-table-column>
           </el-table>
         </div>
@@ -175,10 +179,6 @@ export default {
   },
   methods: {
     confirmSelect () {
-      let _this = this
-      setTimeout(() => {
-        console.log('pageSaleNumber_', _this.pageSaleNumber)
-      }, 0);
       const params = {
         pageNumber: this.activeName === 'sale' ? this.pageSaleNumber - 1 : this.pageSoldoutNumber - 1,
         pageSize: 10,
@@ -186,7 +186,14 @@ export default {
         productType: this.productType,
         status: this.activeName === 'sale' ? '' : 2
       }
-      getProduct(params).then((resp) => {
+      return getProduct(params).then((resp) => {
+        // 加入传回来为空,并且pageNumber不为0则表示这页没数据了
+        if (resp.data.pageList.length === 0 && params.pageNumber !== 0) {
+          console.log('lalsaldalsdasldal');
+          this.activeName === 'sale' ? this.pageSaleNumber -= 1 : this.pageSoldoutNumber -= 1
+          this.confirmSelect()
+        }
+        // 
         if (this.activeName === 'sale') {
           this.tableSale = resp.data.pageList
         } else {
@@ -207,9 +214,15 @@ export default {
         console.log('下架啊', item);
         const params = {
           productId: item.id,
-          status: item.isShow
+          status: 0
         }
-        soldOutProduct(params).then(() => { })
+        const formData = new FormData()
+        for (let item in params) {
+          formData.append(item, params[item])
+        }
+        soldOutProduct(formData).then(() => {
+          this.confirmSelect()
+        })
       }
     }
   },

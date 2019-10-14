@@ -68,15 +68,15 @@ export function editProduct(params) {
   return formRequest({
     url: 'admin/product',
     method: 'put',
-    params: params
+    data: params
   })
 }
-// 编辑产品
+// 下架产品
 export function soldOutProduct(params) {
   return formRequest({
-    url: 'admin/product',
+    url: 'admin/product/IsShow',
     method: 'put',
-    params: params
+    data: params
   })
 }
 // 获取省市数据
