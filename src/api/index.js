@@ -68,7 +68,15 @@ export function editProduct(params) {
   return formRequest({
     url: 'admin/product',
     method: 'put',
-    params: qs.stringify(params)
+    params: params
+  })
+}
+// 编辑产品
+export function soldOutProduct(params) {
+  return formRequest({
+    url: 'admin/product',
+    method: 'put',
+    params: params
   })
 }
 // 获取省市数据
@@ -159,7 +167,7 @@ export function submitOrder(params) {
 }
 
 // 创建优惠券
-export function insertCoupon (params) {
+export function insertCoupon(params) {
   return request({
     url: 'admin/coupon',
     method: 'post',
@@ -168,7 +176,7 @@ export function insertCoupon (params) {
 }
 
 // 更新优惠券
-export function updateCoupon (params) {
+export function updateCoupon(params) {
   return request({
     url: 'admin/coupon',
     method: 'put',
@@ -176,7 +184,7 @@ export function updateCoupon (params) {
   })
 }
 // 获取订单列表
-export function getOrder (params) {
+export function getOrder(params) {
   return request({
     url: 'order/order/getOrders',
     method: 'get',
@@ -185,7 +193,7 @@ export function getOrder (params) {
 }
 
 // 获取所有患者
-export function getPatient (params) {
+export function getPatient(params) {
   return request({
     url: 'patient/patient/getPatientList',
     method: 'get',
@@ -194,7 +202,7 @@ export function getPatient (params) {
 }
 
 // 赠送优惠券
-export function giftCoupon (params) {
+export function giftCoupon(params) {
   return request({
     url: 'patient/patient/disCoupon',
     method: 'PUT',

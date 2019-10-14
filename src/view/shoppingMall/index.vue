@@ -66,7 +66,14 @@
               </template>
             </el-table-column>
             <el-table-column prop="address" label="操作">
-              <div class="operate"><span>编辑</span> | <span>下架</span></div>
+              <template slot-scope="scope">
+                <div class="operate" @click="operate($event, scope.row)">
+                  <span>编辑</span> | <span>下架</span>
+                </div>
+              </template>
+              <!-- <div class="operate" @click="operate($event, scope.row)">
+                <span>编辑</span> | <span>下架</span>
+              </div> -->
             </el-table-column>
           </el-table>
         </div>
@@ -75,13 +82,15 @@
             background
             layout="prev, pager, next"
             :total="totalSaleNumber"
+            :current-page.sync="pageSaleNumber"
+            @current-change="confirmSelect"
           >
           </el-pagination>
         </div>
       </el-tab-pane>
       <el-tab-pane label="已下架" name="soldOut" class="sale">
         <div class="showTable">
-          <el-table :data="tableSale" style="width: 100%">
+          <el-table :data="tableSoldout" style="width: 100%">
             <el-table-column label="商品" width="180">
               <template slot-scope="scope">
                 <div class="shopping">
@@ -130,6 +139,8 @@
             background
             layout="prev, pager, next"
             :total="totalSoldoutNumber"
+            :current-page="pageSoldoutNumber"
+            @current-change="confirmSelect"
           >
           </el-pagination>
         </div>
@@ -138,7 +149,7 @@
   </div>
 </template>
 <script>
-import { getProduct } from '@/api/index'
+import { getProduct, soldOutProduct } from '@/api/index'
 export default {
   data () {
     return {
@@ -164,12 +175,16 @@ export default {
   },
   methods: {
     confirmSelect () {
+      let _this = this
+      setTimeout(() => {
+        console.log('pageSaleNumber_', _this.pageSaleNumber)
+      }, 0);
       const params = {
-        pageNumber: 0,
+        pageNumber: this.activeName === 'sale' ? this.pageSaleNumber - 1 : this.pageSoldoutNumber - 1,
         pageSize: 10,
         productName: this.productName,
         productType: this.productType,
-        status: this.activeName === 'sale' ? 1 : 0
+        status: this.activeName === 'sale' ? '' : 2
       }
       getProduct(params).then((resp) => {
         if (this.activeName === 'sale') {
@@ -179,6 +194,23 @@ export default {
         }
         this.pageNumber = resp.data.pageNumber
       })
+    },
+    operate (e, item) {
+      console.log('e_', e.target.innerText);
+      if (e.target.innerText === '编辑') {
+        console.log('编辑啊');
+        this.$router.push({
+          name: `commodity`,
+          params: item
+        })
+      } else if (e.target.innerText === '下架') {
+        console.log('下架啊', item);
+        const params = {
+          productId: item.id,
+          status: item.isShow
+        }
+        soldOutProduct(params).then(() => { })
+      }
     }
   },
   filters: {
@@ -187,15 +219,32 @@ export default {
     }
   },
   created () {
-    const params =
-    {      pageNumber: 0,
-      pageSize: 10    }
-    // this.$http.get('/admin/product', { params }).then((resp) => {
-    //   console.log('resp_', resp)
-    //   this.tableSale = resp.data.pageList
-    // })
+    const params = {
+      pageNumber: 0,
+      pageSize: 10,
+      productName: this.productName,
+      productType: this.productType,
+      status: ''
+    }
+    getProduct(params).then((resp) => {
+      this.tableSale = resp.data.pageList
+      this.pageNumber = resp.data.pageNumber
+      this.totalSaleNumber = resp.data.totalElements
+    })
+    const paramsT = {
+      pageNumber: 0,
+      pageSize: 10,
+      productName: this.productName,
+      productType: this.productType,
+      status: 2
+    }
+    getProduct(paramsT).then((resp) => {
+      this.tableSoldout = resp.data.pageList
+      this.pageSoldoutNumber = resp.data.pageNumber
+      this.totalSoldoutNumber = resp.data.totalElements
+    })
   }
-};
+}
 </script>
 <style lang="scss" scoped>
 .main {

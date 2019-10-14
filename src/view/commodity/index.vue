@@ -124,7 +124,6 @@
   </div>
 </template>
 <script>
-import { formatDateTime } from '@/utils/formatDateTime.js'
 import validate from '@/utils/validate.js'
 import { newProduct, editProduct } from '@/api/index.js'
 export default {
@@ -189,7 +188,6 @@ export default {
   methods: {
     onSubmit (formName) {
       console.log('this.ruleForm_', this.ruleForm)
-      // const time = formatDateTime(this.ruleForm.shelfTime, 'yyyy-MM-dd hh:mm:ss')
       this.$refs[formName].validate((valid) => {
         if (valid) {
           console.log('success')
@@ -208,15 +206,12 @@ export default {
       }
       const params = this.ruleForm
       if (this.ruleForm.isShow === 2) {
-        // const time  = formatDateTime(this.ruleForm.shelfTime, 'yyyy-MM-dd hh:mm:ss')
         params.shelfTime = new Date(this.ruleForm.shelfTime).getTime();
       }
       params.file = params.image
       // 建立new formdata 
       const formData = new FormData()
       for (let item in params) {
-        // console.log('item_', item);
-        // console.log('item_', params[item]);
         formData.append(item, params[item])
       }
       newProduct(formData).then(() => {
