@@ -157,3 +157,47 @@ export function submitOrder(params) {
     data: params
   })
 }
+
+// 创建优惠券
+export function insertCoupon (params) {
+  return request({
+    url: 'admin/coupon',
+    method: 'post',
+    data: params
+  })
+}
+
+// 更新优惠券
+export function updateCoupon (params) {
+  return request({
+    url: 'admin/coupon',
+    method: 'put',
+    data: params
+  })
+}
+// 获取订单列表
+export function getOrder (params) {
+  return request({
+    url: 'order/order/getOrders',
+    method: 'get',
+    params: params
+  })
+}
+
+// 获取所有患者
+export function getPatient (params) {
+  return request({
+    url: 'patient/patient/getPatientList',
+    method: 'get',
+    params: params
+  })
+}
+
+// 赠送优惠券
+export function giftCoupon (params) {
+  return request({
+    url: 'patient/patient/disCoupon',
+    method: 'PUT',
+    params: params
+  })
+}

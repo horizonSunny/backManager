@@ -1,9 +1,7 @@
 <template>
   <div class="text-box">
     <div class="choose">
-      <el-button size="small" style="margin-left:20px" @click="confirmNew"
-        >新建优惠券</el-button
-      >
+      <el-button size="small" style="margin-left:20px" @click="confirmNew">新建优惠券</el-button>
     </div>
     <el-tabs v-model="activeName">
       <el-tab-pane label="优惠券" name="first"> </el-tab-pane>
@@ -13,9 +11,9 @@
         <el-table-column label="名称" prop="couponName"></el-table-column>
         <el-table-column label="使用规则" width="160">
           <template slot-scope="scope">
-            <div>①不限制使用门槛</div>
+            <div>①{{ scope.row.couponType===0 ? '不限制使用门槛' : ('满'+ scope.row.useMinPrice +'减'+ scope.row.couponPrice) }}</div>
             <div>②所有人可领取</div>
-            <div>③商品限制:所有商品</div>
+            <div>③商品限制:{{ scope.row.usableGoods ? scope.row.usableGoods : '所有商品' }}</div>
           </template>
         </el-table-column>
         <el-table-column label="有效期" width="360">
@@ -35,15 +33,21 @@
           </template>
         </el-table-column>
         <el-table-column label="操作">
-          <div class="operate"><el-button type='text'>停用</el-button></div>
+          <template slot-scope="scope">
+            <div>
+              <el-button type='text' @click="updateCoupon(scope.row)">更新优惠券</el-button>
+            </div>
+          </template>
         </el-table-column>
       </el-table>
     </div>
     <div class="pagination" v-show="totalSaleNumber>0">
       <el-pagination
         background
-        layout="prev, pager, next"
+        layout="prev, pager, next, total"
         :total="totalSaleNumber"
+        current-page.sync = "currentPage"
+        @current-change = "currentChange"
       >
       </el-pagination>
     </div>
@@ -52,11 +56,6 @@
 <script>
 import { getCouponList } from '@/api/index.js'
 export default {
-  data () {
-    return {
-      activeName: 'first',
-    };
-  },
   data () {
     return {
       activeName: 'sale',
@@ -68,31 +67,57 @@ export default {
         label: '非处方药'
       }],
       // 筛选条件
-      productName: '',
-      productType: '',
       pageSaleNumber: 0,
       pageSoldoutNumber: 0,
       totalSaleNumber: 0,
+      currentPage: 1,
       totalSoldoutNumber: 0,
       pageSize: 10,
       tableSale: null,
-      tableSoldout: null,
-      //form
-      form: {
-        name: ''
-      }
+      tableSoldout: null
     };
   },
   methods: {
     confirmNew () {
       console.log('confirmNew');
       this.$router.push('newCoupon')
+    },
+    currentChange (current) {
+      const params = {      
+        pageNumber: current -1,
+        pageSize: 10
+      }
+      this.getList(params)
+    },
+    getList (params) {
+      getCouponList(params).then(
+        (data) => {
+          if (data.code === 1) {
+            this.tableSale = data.data.pageList
+            this.totalSaleNumber = data.data.totalElements
+          } else {
+            this.$message({
+              message: data.msg,
+              type: 'error'
+            })
+          }
+        }
+      )
+    },
+    updateCoupon (row) {
+      if (row.id) {
+        this.$router.push({
+          path: 'newCoupon',
+          query: {
+            'coupon': row
+          }
+        })
+      }
     }
   },
   filters: {
     productType: function (value) {
       // 0：未激活，1：激活，2：已过期或者发放完毕
-      let temp = ''
       if (value === 0) {
         return '未激活'
       } else if (value === 1) {
@@ -107,18 +132,7 @@ export default {
       pageNumber: 0,
       pageSize: 10
     }
-    getCouponList(params).then(
-      (data) => {
-        if (data.code === 1) {
-          this.tableSale = data.data.pageList
-        } else {
-          this.$message({
-            message: data.msg,
-            type: 'error'
-          })
-        }
-      }
-    )
+    this.getList(params)
   }
 };
 </script>

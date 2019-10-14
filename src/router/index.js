@@ -9,8 +9,12 @@ import Layout from '@/layout'
 /* Router Modules */
 
 export const constantRoutes = [
+  // {
+  //   path: '*',
+  //   redirect: 'login',
+  // },
   {
-    path: '/',
+    path: '*',
     name: 'login',
     component: () => import('@/view/login/index.vue'),
     hidden: true
