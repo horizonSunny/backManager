@@ -1,14 +1,14 @@
-import { userLogin, getUserInfo } from '@/api/index.js'
-import { reject } from 'q'
-const defaultAddress = {
-  'area': '',
-  'city': '',
-  'detailAddress': '',
-  'fullName': '',
-  'isDefault': 0,
-  'phone': '',
-  'province': ''
-}
+import { userLogin } from '@/api/index.js'
+// import { reject } from 'q'
+// const defaultAddress = {
+//   'area': '',
+//   'city': '',
+//   'detailAddress': '',
+//   'fullName': '',
+//   'isDefault': 0,
+//   'phone': '',
+//   'province': ''
+// }
 const user = {
   state: {
     userData: {}
