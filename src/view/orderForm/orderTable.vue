@@ -5,7 +5,7 @@
         <el-row>
           <el-col :span="8" :gutter="20">
             <el-form-item label="订单号">
-              <el-input v-model="form.orderNumber"></el-input>
+              <el-input v-model="form.orderNo"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8" :gutter="20">
@@ -210,8 +210,8 @@ export default {
     },
     dateChange (value) {
       if (value) {
-        this.form.startTime = new Date(value[0]).getTime() / 100
-        this.form.endTime = new Date(value[1]).getTime() / 100
+        this.form.startTime = new Date(value[0]).getTime()
+        this.form.endTime = new Date(value[1]).getTime()
       } else {
         this.form.startTime = ""
         this.form.endTime = ""
