@@ -216,6 +216,10 @@ export default {
         this.$message.error('请选择商品封面');
         return false
       }
+      if (this.ruleForm.vipPrice < 0 || this.ruleForm.vipPrice >= this.ruleForm.price) {
+        this.$message.error('商品折扣价格不应小于0或者大于商品价格');
+        return false
+      }
       // 
       const params = this.ruleForm
       if (this.ruleForm.isShow === 2 || this.ruleForm.shelfTime) {

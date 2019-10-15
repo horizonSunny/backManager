@@ -19,12 +19,13 @@
         placeholder="请输入内容"
         style="width:200px;margin-left:20px"
       ></el-input>
-      <el-button style="margin-left:20px" @confirm="confirmSelect()"
+      <el-button style="margin-left:20px" @click="confirmSelect"
         >搜索</el-button
       >
     </div>
     <el-tabs
       v-model="activeName"
+      @tab-click="handleClick"
       style="width:100%;flex:1;display:flex;flex-direction: column;"
     >
       <el-tab-pane label="出售中" name="sale" class="sale">
@@ -146,7 +147,7 @@
             background
             layout="prev, pager, next"
             :total="totalSoldoutNumber"
-            :current-page="pageSoldoutNumber"
+            :current-page.sync="pageSoldoutNumber"
             @current-change="confirmSelect"
           >
           </el-pagination>
@@ -161,13 +162,17 @@ export default {
   data () {
     return {
       activeName: 'sale',
-      options: [{
-        value: 0,
-        label: '处方药'
-      }, {
-        value: 1,
-        label: '非处方药'
-      }],
+      options: [
+        {
+          value: '',
+          label: '全部'
+        }, {
+          value: 0,
+          label: '处方药'
+        }, {
+          value: 1,
+          label: '非处方药'
+        }],
       // 筛选条件
       productName: '',
       productType: '',
@@ -199,8 +204,10 @@ export default {
         // 
         if (this.activeName === 'sale') {
           this.tableSale = resp.data.pageList
+          this.totalSaleNumber = resp.data.totalElements
         } else {
           this.tableSoldout = resp.data.pageList
+          this.totalSoldoutNumber = resp.data.totalElements
         }
         this.pageNumber = resp.data.pageNumber
       })
@@ -227,6 +234,15 @@ export default {
           this.confirmSelect()
         })
       }
+    },
+    handleClick (tab) {
+      console.log(tab.label);
+      if (tab.label === '已下架') {
+        this.activeName = 'soldOut'
+      } else if (tab.label === '出售中') {
+        this.activeName = 'sale'
+      }
+      this.confirmSelect()
     }
   },
   filters: {
@@ -246,18 +262,6 @@ export default {
       this.tableSale = resp.data.pageList
       this.pageNumber = resp.data.pageNumber
       this.totalSaleNumber = resp.data.totalElements
-    })
-    const paramsT = {
-      pageNumber: 0,
-      pageSize: 10,
-      productName: this.productName,
-      productType: this.productType,
-      status: 2
-    }
-    getProduct(paramsT).then((resp) => {
-      this.tableSoldout = resp.data.pageList
-      this.pageSoldoutNumber = resp.data.pageNumber
-      this.totalSoldoutNumber = resp.data.totalElements
     })
   }
 }
