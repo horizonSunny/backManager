@@ -210,8 +210,8 @@ export default {
     },
     dateChange (value) {
       if (value) {
-        this.form.startTime = new Date(value[0]).getTime() / 100
-        this.form.endTime = new Date(value[1]).getTime() / 100
+        this.form.startTime = new Date(value[0]).getTime()
+        this.form.endTime = new Date(value[1]).getTime()
       } else {
         this.form.startTime = ""
         this.form.endTime = ""
