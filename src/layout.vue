@@ -8,29 +8,30 @@
             :key="indexInfo"
             @click="sidebarClick(item)"
           >
-            <template slot="title"
-              ><i
-                :class="
-                  indexInfo % 2 === 0 ? 'el-icon-menu' : 'el-icon-document'
-                "
-              ></i
-              >{{ item["name"] }}</template
-            ></el-menu-item
-          >
+            <i
+              :class="indexInfo % 2 === 0 ? 'el-icon-menu' : 'el-icon-document'"
+            ></i
+            >{{ item["name"] }}
+          </el-menu-item>
         </el-menu>
       </el-aside>
-
       <el-container>
         <el-header style="text-align: right; font-size: 12px;">
           <el-dropdown>
-            <i class="el-icon-setting" style="margin-right: 15px"> {{ userName }}</i>
+            <i class="el-icon-setting" style="margin-right: 15px">
+              {{ userName }}</i
+            >
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item @click.native="handleLogout">退出</el-dropdown-item>
+              <el-dropdown-item @click.native="handleLogout"
+                >退出</el-dropdown-item
+              >
             </el-dropdown-menu>
           </el-dropdown>
         </el-header>
         <el-main>
-          <router-view></router-view>
+          <keep-alive :include="saveComponent">
+            <router-view></router-view>
+          </keep-alive>
         </el-main>
       </el-container>
     </el-container>
@@ -48,7 +49,12 @@ export default {
         { name: '会员管理', routePath: 'member' },
         { name: '优惠券', routePath: 'discountCoupon' }
       ],
-      userName: this.$store.state.user.userData?this.$store.state.user.userData.username:'暂无'
+      userName: this.$store.state.user.userData ? this.$store.state.user.userData.username : '暂无'
+    }
+  },
+  computed: {
+    saveComponent () {
+      return this.$store.getters.saveComponent
     }
   },
   methods: {

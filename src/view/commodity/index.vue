@@ -121,16 +121,26 @@
         </el-form>
       </el-tab-pane>
     </el-tabs>
+    <el-dialog
+      title="提示"
+      :visible.sync="centerDialogVisible"
+      width="30%"
+      center
+    >
+      <span>是否保存页面</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="cancelSave">取 消</el-button>
+        <el-button type="primary" @click="confirmSave">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
 import validate from '@/utils/validate.js'
 import { newProduct, editProduct } from '@/api/index.js'
 export default {
+  name: "commodity",
   data () {
-    // let checkPrice = (rule, value, callback) => {
-    //   value.toFixed(2)
-    // }
     return {
       activeName: 'first',
       ruleForm: {
@@ -184,7 +194,10 @@ export default {
         disabledDate (time) {
           return time.getTime() < Date.now();
         }
-      }
+      },
+      // 包活不
+      centerDialogVisible: false,
+      toPath: ''
     };
   },
   methods: {
@@ -255,6 +268,21 @@ export default {
     resetruleForm (ruleFormName) {
       console.log(this.$refs[ruleFormName]);
       this.$refs[ruleFormName].resetFields();
+    },
+    // 不保存页面
+    cancelSave () {
+      const _that = this
+      this.$refs['ruleForm'].resetFields();
+      this.$store.dispatch('deleteComponent', 'commodity').then(() => {
+        _that.$router.push(_that.toPath)
+      })
+    },
+    // 保存页面
+    confirmSave () {
+      const _that = this
+      this.$store.dispatch('saveComponent', 'commodity').then(() => {
+        _that.$router.push(_that.toPath)
+      })
     }
   },
   created () {
@@ -278,6 +306,42 @@ export default {
         this.fileList.push({ url: productInfo.image })
     }
   },
+  // 离开页面前
+  beforeRouteLeave (to, from, next) {
+    // 比对this.ruleForm有没有修改，浅比较
+    let show = false;
+    this.toPath = to.name
+    console.log('to_', to);
+    const compareObj = {
+      productName: '',
+      image: '',
+      manufacturer: '',
+      describe: '',
+      productType: 0,
+      price: '',
+      vipPrice: '',
+      productSpecif: '',
+      stock: '',
+      isShow: 1,
+      shelfTime: '',
+      producInfo: ''
+    }
+    // 假如并不是保存离开
+    if (this.centerDialogVisible === false) {
+      for (let item in this.ruleForm) {
+        if (this.ruleForm[item] !== compareObj[item]) {
+          show = true
+        }
+      }
+    }
+    if (show) {
+      this.centerDialogVisible = true
+    } else {
+      this.$refs['ruleForm'].clearValidate();
+      this.centerDialogVisible = false
+      next()
+    }
+  }
 }
 </script>
 
