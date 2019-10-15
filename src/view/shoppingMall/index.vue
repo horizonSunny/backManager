@@ -23,7 +23,10 @@
         >搜索</el-button
       >
     </div>
-    <el-tabs v-model="activeName" style="width:100%">
+    <el-tabs
+      v-model="activeName"
+      style="width:100%;flex:1;display:flex;flex-direction: column;"
+    >
       <el-tab-pane label="出售中" name="sale" class="sale">
         <div class="showTable">
           <el-table :data="tableSale" style="width: 100%">
@@ -57,7 +60,7 @@
             <el-table-column prop="address" label="销售统计">
               <template slot-scope="scope">
                 <div>库存:{{ scope.row.stock ? scope.row.stock : 0 }}</div>
-                <div>已销售:{{ scope.row.sales ? scope.row.sales : 0 }}</div>
+                <div>已接单:{{ scope.row.sales ? scope.row.sales : 0 }}</div>
               </template>
             </el-table-column>
             <el-table-column prop="address" label="创建时间">
@@ -121,7 +124,7 @@
             <el-table-column prop="address" label="销售统计">
               <template slot-scope="scope">
                 <div>库存:{{ scope.row.stock ? scope.row.stock : 0 }}</div>
-                <div>已销售:{{ scope.row.sales ? scope.row.sales : 0 }}</div>
+                <div>已接单:{{ scope.row.sales ? scope.row.sales : 0 }}</div>
               </template>
             </el-table-column>
             <el-table-column prop="address" label="创建时间">
@@ -262,6 +265,8 @@ export default {
 <style lang="scss" scoped>
 .main {
   position: relative;
+  display: flex;
+  flex-direction: column;
   .choose {
     position: relative;
     left: 50%;
@@ -269,11 +274,18 @@ export default {
     display: flex;
     justify-content: flex-end;
   }
+  /deep/ .el-tabs__content {
+    flex: 1;
+  }
   .sale {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     .showTable {
       height: 90%;
-      overflow: auto;
-      overflow-x: hidden;
+      // overflow: auto;
+      // overflow-x: hidden;
       .shopping {
         display: flex;
         .shoppingInfo {
@@ -289,8 +301,10 @@ export default {
     }
     .pagination {
       width: 100%;
-      position: fixed;
-      bottom: 20px;
+      height: 50px;
+      margin-top: 20px;
+      // position: relative;
+      // bottom: 20px;
       text-align: center;
       left: 0px;
     }

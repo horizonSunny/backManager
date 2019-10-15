@@ -88,6 +88,7 @@
                       type="datetime"
                       size="small"
                       placeholder="选择日期时间"
+                      :picker-options="pickerOptions"
                     >
                     </el-date-picker>
                   </div>
@@ -127,6 +128,9 @@ import validate from '@/utils/validate.js'
 import { newProduct, editProduct } from '@/api/index.js'
 export default {
   data () {
+    // let checkPrice = (rule, value, callback) => {
+    //   value.toFixed(2)
+    // }
     return {
       activeName: 'first',
       ruleForm: {
@@ -163,10 +167,6 @@ export default {
           { required: true, message: '请填写商品价格', trigger: 'blur' },
           { type: 'number', message: '商品价格为数字' }
         ],
-        vipPrice: [
-          { required: true, message: '请填写折扣价格', trigger: 'blur' },
-          { type: 'number', message: '折扣价格为数字' }
-        ],
         productSpecif: [
           { required: true, message: '请填写商品规格', trigger: 'blur' }
         ],
@@ -178,7 +178,13 @@ export default {
           { required: true, message: '请填写商品详情', trigger: 'blur' }
         ]
       },
-      type: 'new'
+      type: 'new',
+      // 时间选择
+      pickerOptions: {
+        disabledDate (time) {
+          return time.getTime() < Date.now();
+        }
+      }
     };
   },
   methods: {
@@ -219,6 +225,9 @@ export default {
       // 建立new formdata 
       const formData = new FormData()
       for (let item in params) {
+        if (typeof (params[item]) == 'undefined' || params[item] === null) {
+          params[item] = ''
+        }
         formData.append(item, params[item])
       }
       if (this.type === 'new') {
@@ -257,6 +266,7 @@ export default {
       this.ruleForm.price = productInfo.price
       this.ruleForm.otPrice = productInfo.otPrice
       this.ruleForm.productSpecif = productInfo.productSpecif
+      this.ruleForm.vipPrice = productInfo.vipPrice
       this.ruleForm.stock = productInfo.stock
       this.ruleForm.isShow = productInfo.isShow
       this.ruleForm.shelfTime = productInfo.shelfTime
