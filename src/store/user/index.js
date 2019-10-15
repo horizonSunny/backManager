@@ -1,4 +1,4 @@
-import { userLogin } from '@/api/index.js'
+import { userLogin, getUserInfo } from '@/api/index.js'
 import { reject } from 'q'
 const defaultAddress = {
   'area': '',
