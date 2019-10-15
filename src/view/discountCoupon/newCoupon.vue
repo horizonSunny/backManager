@@ -233,8 +233,8 @@ export default {
       console.log('日期选择变化:', value)
       if (value) {
         this.form.useTime = value
-        this.form.startTime = new Date(value[0]).getTime()/100
-        this.form.endTime = new Date(value[1]).getTime()/100
+        this.form.startTime = new Date(value[0]).getTime()
+        this.form.endTime = new Date(value[1]).getTime()
       } else {
         this.form.useTime = value
         this.form.startTime = ""
@@ -281,8 +281,8 @@ export default {
       if (oldData.startTime && oldData.endTime) {
         this.useTime = [new Date(oldData.startTime), new Date(oldData.endTime)]
         oldData.useTime = [new Date(oldData.startTime), new Date(oldData.endTime)]
-        oldData.startTime = new Date(oldData.startTime).getTime()/100
-        oldData.endTime = new Date(oldData.endTime).getTime()/100
+        oldData.startTime = new Date(oldData.startTime).getTime()
+        oldData.endTime = new Date(oldData.endTime).getTime()
       }
       this.form = Object.assign({},oldData)
     }
