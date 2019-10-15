@@ -5,7 +5,7 @@
         <el-row>
           <el-col :span="8" :gutter="20">
             <el-form-item label="订单号">
-              <el-input v-model="form.orderNumber"></el-input>
+              <el-input v-model="form.orderNo"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8" :gutter="20">
