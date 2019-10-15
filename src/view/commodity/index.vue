@@ -272,6 +272,7 @@ export default {
     // 不保存页面
     cancelSave () {
       const _that = this
+      this.$refs['ruleForm'].resetFields();
       this.$store.dispatch('deleteComponent', 'commodity').then(() => {
         _that.$router.push(_that.toPath)
       })
@@ -336,8 +337,9 @@ export default {
     if (show) {
       this.centerDialogVisible = true
     } else {
-      next()
+      this.$refs['ruleForm'].clearValidate();
       this.centerDialogVisible = false
+      next()
     }
   }
 }
