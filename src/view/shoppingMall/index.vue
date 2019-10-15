@@ -19,11 +19,15 @@
         placeholder="请输入内容"
         style="width:200px;margin-left:20px"
       ></el-input>
-      <el-button style="margin-left:20px" @confirm="confirmSelect()"
+      <el-button style="margin-left:20px" @click="confirmSelect"
         >搜索</el-button
       >
     </div>
-    <el-tabs v-model="activeName" style="width:100%">
+    <el-tabs
+      v-model="activeName"
+      @tab-click="handleClick"
+      style="width:100%;flex:1;display:flex;flex-direction: column;"
+    >
       <el-tab-pane label="出售中" name="sale" class="sale">
         <div class="showTable">
           <el-table :data="tableSale" style="width: 100%">
@@ -57,7 +61,7 @@
             <el-table-column prop="address" label="销售统计">
               <template slot-scope="scope">
                 <div>库存:{{ scope.row.stock ? scope.row.stock : 0 }}</div>
-                <div>已销售:{{ scope.row.sales ? scope.row.sales : 0 }}</div>
+                <div>已接单:{{ scope.row.sales ? scope.row.sales : 0 }}</div>
               </template>
             </el-table-column>
             <el-table-column prop="address" label="创建时间">
@@ -121,7 +125,7 @@
             <el-table-column prop="address" label="销售统计">
               <template slot-scope="scope">
                 <div>库存:{{ scope.row.stock ? scope.row.stock : 0 }}</div>
-                <div>已销售:{{ scope.row.sales ? scope.row.sales : 0 }}</div>
+                <div>已接单:{{ scope.row.sales ? scope.row.sales : 0 }}</div>
               </template>
             </el-table-column>
             <el-table-column prop="address" label="创建时间">
@@ -143,7 +147,7 @@
             background
             layout="prev, pager, next"
             :total="totalSoldoutNumber"
-            :current-page="pageSoldoutNumber"
+            :current-page.sync="pageSoldoutNumber"
             @current-change="confirmSelect"
           >
           </el-pagination>
@@ -158,13 +162,17 @@ export default {
   data () {
     return {
       activeName: 'sale',
-      options: [{
-        value: 0,
-        label: '处方药'
-      }, {
-        value: 1,
-        label: '非处方药'
-      }],
+      options: [
+        {
+          value: '',
+          label: '全部'
+        }, {
+          value: 0,
+          label: '处方药'
+        }, {
+          value: 1,
+          label: '非处方药'
+        }],
       // 筛选条件
       productName: '',
       productType: '',
@@ -196,8 +204,10 @@ export default {
         // 
         if (this.activeName === 'sale') {
           this.tableSale = resp.data.pageList
+          this.totalSaleNumber = resp.data.totalElements
         } else {
           this.tableSoldout = resp.data.pageList
+          this.totalSoldoutNumber = resp.data.totalElements
         }
         this.pageNumber = resp.data.pageNumber
       })
@@ -224,6 +234,15 @@ export default {
           this.confirmSelect()
         })
       }
+    },
+    handleClick (tab) {
+      console.log(tab.label);
+      if (tab.label === '已下架') {
+        this.activeName = 'soldOut'
+      } else if (tab.label === '出售中') {
+        this.activeName = 'sale'
+      }
+      this.confirmSelect()
     }
   },
   filters: {
@@ -244,24 +263,14 @@ export default {
       this.pageNumber = resp.data.pageNumber
       this.totalSaleNumber = resp.data.totalElements
     })
-    const paramsT = {
-      pageNumber: 0,
-      pageSize: 10,
-      productName: this.productName,
-      productType: this.productType,
-      status: 2
-    }
-    getProduct(paramsT).then((resp) => {
-      this.tableSoldout = resp.data.pageList
-      this.pageSoldoutNumber = resp.data.pageNumber
-      this.totalSoldoutNumber = resp.data.totalElements
-    })
   }
 }
 </script>
 <style lang="scss" scoped>
 .main {
   position: relative;
+  display: flex;
+  flex-direction: column;
   .choose {
     position: relative;
     left: 50%;
@@ -269,11 +278,18 @@ export default {
     display: flex;
     justify-content: flex-end;
   }
+  /deep/ .el-tabs__content {
+    flex: 1;
+  }
   .sale {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     .showTable {
       height: 90%;
-      overflow: auto;
-      overflow-x: hidden;
+      // overflow: auto;
+      // overflow-x: hidden;
       .shopping {
         display: flex;
         .shoppingInfo {
@@ -289,8 +305,10 @@ export default {
     }
     .pagination {
       width: 100%;
-      position: fixed;
-      bottom: 20px;
+      height: 50px;
+      margin-top: 20px;
+      // position: relative;
+      // bottom: 20px;
       text-align: center;
       left: 0px;
     }
