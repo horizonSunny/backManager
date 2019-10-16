@@ -2,8 +2,8 @@ import axios from 'axios'
 import store from '@/store/index.js'
 import router from '@/router'
 import { Message } from 'element-ui'
-// const baseURL = 'http://192.168.10.234:9000'
-const baseURL = 'https://ijixin.com/'
+const baseURL = 'http://47.103.158.133/'
+// const baseURL = 'https://ijixin.com/'
 const initAuthorization = 'Basic c3lzdGVtOnN5c3RlbQ=='
 const request = axios.create({
   baseURL: baseURL,
@@ -15,25 +15,32 @@ const request = axios.create({
 })
 
 request.interceptors.request.use(
-  function (config) {
-    if (store && store.getters.userData && store.getters.userData.access_token) {
-      config.headers['Authorization'] = store.getters.userData.token_type + ' ' + store.getters.userData.access_token
+  function(config) {
+    if (
+      store &&
+      store.getters.userData &&
+      store.getters.userData.access_token
+    ) {
+      config.headers['Authorization'] =
+        store.getters.userData.token_type +
+        ' ' +
+        store.getters.userData.access_token
     }
     return config
   },
-  function (error) {
+  function(error) {
     return Promise.reject(error)
   }
 )
 
 request.interceptors.response.use(
-  function (response) {
+  function(response) {
     if (response && response.data) {
       // 登录失效
       if (response.data.code === 2) {
         store.dispatch('logout').then(() => {
           Message('请重新登录!')
-          router.push({ 'path': 'login' })
+          router.push({ path: 'login' })
           // location.reload()
         })
         return false
@@ -43,7 +50,7 @@ request.interceptors.response.use(
       return Promise.reject(response)
     }
   },
-  function (error) {
+  function(error) {
     Message('网络请求失败,请检查网络!')
     return Promise.reject(error)
   }

@@ -2,8 +2,8 @@ import axios from 'axios'
 import store from '@/store/index.js'
 import router from '@/router'
 import { Message } from 'element-ui'
-// const baseURL = 'http://192.168.10.234:9000'
-const baseURL = 'https://ijixin.com/'
+const baseURL = 'http://47.103.158.133/'
+// const baseURL = 'https://ijixin.com/'
 const initAuthorization = 'Basic c3lzdGVtOnN5c3RlbQ=='
 const request = axios.create({
   baseURL: baseURL,
